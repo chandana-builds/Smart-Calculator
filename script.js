@@ -237,17 +237,6 @@ Always use clear Markdown for your steps.`;
 
     try {
       // 3. Prepare payload for Pollinations AI (Free, No Key Required!)
-      const url = `https://text.pollinations.ai/`;
-
-      const messages = [
-        { role: "system", content: systemInstruction }
-      ];
-
-      // Add previous chat history
-      chatHistory.forEach(msg => {
-        messages.push(msg);
-      });
-
       // Construct current user content (Pollinations works best with text)
       let userText = text;
       if (!text && hasImage) {
@@ -256,20 +245,16 @@ Always use clear Markdown for your steps.`;
         userText = text + " [Image attached]";
       }
 
-      messages.push({ role: "user", content: userText });
-
-      const requestBody = {
-        messages: messages,
-        model: "openai"
-      };
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody)
+      // Build a full text prompt for GET request to completely bypass CORS preflight constraints
+      let fullPrompt = systemInstruction + "\n\n";
+      chatHistory.forEach(msg => {
+        fullPrompt += `${msg.role}: ${msg.content}\n`;
       });
+      fullPrompt += `user: ${userText}`;
+
+      const url = `https://text.pollinations.ai/${encodeURIComponent(fullPrompt)}`;
+
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error(`API Error: ${response.status} - Failed to connect to AI.`);
