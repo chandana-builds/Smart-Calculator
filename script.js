@@ -236,8 +236,8 @@ Always use clear Markdown for your steps.`;
     const loadingElem = addLoadingIndicator();
 
     try {
-      // 3. Prepare payload for OpenRouter REST API
-      const url = `https://openrouter.ai/api/v1/chat/completions`;
+      // 3. Prepare payload for Pollinations AI (Free, No Key Required!)
+      const url = `https://text.pollinations.ai/`;
 
       const messages = [
         { role: "system", content: systemInstruction }
@@ -248,46 +248,34 @@ Always use clear Markdown for your steps.`;
         messages.push(msg);
       });
 
-      // Construct current user content
-      let userContent = [];
-      if (text) {
-        userContent.push({ type: "text", text: text });
-      }
-      if (hasImage) {
-        userContent.push({
-          type: "image_url",
-          image_url: {
-            url: `data:${mimeType};base64,${base64Data}`
-          }
-        });
+      // Construct current user content (Pollinations works best with text)
+      let userText = text;
+      if (!text && hasImage) {
+        userText = "Please solve the math problem in the image I uploaded. (Note: Since I'm on a free API, I might not see the image perfectly. Please provide a general bodmas calculation if I don't give you numbers).";
+      } else if (hasImage) {
+        userText = text + " [Image attached]";
       }
 
-      messages.push({ role: "user", content: userContent });
+      messages.push({ role: "user", content: userText });
 
       const requestBody = {
-        model: "meta-llama/llama-3.2-11b-vision-instruct:free",
         messages: messages,
+        model: "openai"
       };
 
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${API_KEY}`,
-          "HTTP-Referer": "https://calculator-app.local", // Optional but good practice for OpenRouter
-          "X-Title": "Smart Calculator Chatbot"
         },
         body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("OpenRouter API Error details:", errorData);
-        throw new Error(`API Error: ${response.status} - ${errorData.error?.message || "Unknown error"}. Please check your API Key.`);
+        throw new Error(`API Error: ${response.status} - Failed to connect to AI.`);
       }
 
-      const data = await response.json();
-      const responseText = data.choices[0].message.content;
+      const responseText = await response.text();
 
       // Detection for weird hallucinations (like Suzy Stretchedpants)
       const hallucinationKeywords = ["Suzy", "Harvard", "multicultural", "drug", "theft", "comics"];
