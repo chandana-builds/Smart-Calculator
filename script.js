@@ -265,9 +265,8 @@ Always use clear Markdown for your steps.`;
       messages.push({ role: "user", content: userContent });
 
       const requestBody = {
-        model: "nvidia/nemotron-nano-12b-v2-vl:free",
+        model: "meta-llama/llama-3.2-11b-vision-instruct:free",
         messages: messages,
-        transforms: ["middle-out"] // OpenRouter specific optimization
       };
 
       const response = await fetch(url, {
@@ -284,7 +283,7 @@ Always use clear Markdown for your steps.`;
       if (!response.ok) {
         const errorData = await response.json();
         console.error("OpenRouter API Error details:", errorData);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorData.error?.message || "Unknown error"}`);
+        throw new Error(`API Error: ${response.status} - ${errorData.error?.message || "Unknown error"}. Please check your API Key.`);
       }
 
       const data = await response.json();
@@ -313,7 +312,7 @@ Always use clear Markdown for your steps.`;
     } catch (error) {
       console.error("Chatbot API Error:", error);
       loadingElem.remove();
-      addMessage("I'm sorry, I encountered an error. Please try again.", false);
+      addMessage(`Oops! Setup Error: ${error.message} \n\n(Tip: If 'User not found' or 401, update API_KEY in script.js)`, false);
     }
   };
 
