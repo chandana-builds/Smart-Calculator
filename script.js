@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedImageMimeType = null;
 
   // OpenRouter API Key details
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   // Chat History for REST API
   let chatHistory = [];
