@@ -237,7 +237,7 @@ Always use clear Markdown for your steps.`;
 
     try {
       // 3. Prepare payload for Pollinations AI (Free, No Key Required!)
-      const url = `https://text.pollinations.ai/`;
+      const url = `https://gen.pollinations.ai/openai`;
 
       const messages = [
         { role: "system", content: systemInstruction }
@@ -263,10 +263,11 @@ Always use clear Markdown for your steps.`;
         model: "openai"
       };
 
-      // By omitting Content-Type: application/json, we completely bypass the 
-      // strict browser CORS 'OPTIONS' preflight block while still functioning.
       const response = await fetch(url, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(requestBody)
       });
 
