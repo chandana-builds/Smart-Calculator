@@ -1,69 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Smart Calculator</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
+
 <body>
 
-<div class="calculator">
-  <div class="top-bar">
-    <input type="color" id="colorPicker">
-    <button id="historyBtn">History</button>
+  <div class="calculator">
+    <div class="top-bar">
+      <input type="color" id="colorPicker">
+      <div>
+        <button id="aiBtn" class="top-btn">🤖 Chatbot</button>
+        <button id="historyBtn" class="top-btn">History</button>
+      </div>
+    </div>
+
+    <input type="text" id="display" readonly>
+
+    <div class="buttons">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="deleteLast()">⌫</button>
+      <button onclick="append('%')">%</button>
+      <button onclick="append('/')">÷</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button onclick="append('*')">×</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button onclick="append('-')">-</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button onclick="append('+')">+</button>
+
+      <button onclick="toggleScientific()">🔁</button>
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button onclick="calculate()">=</button>
+    </div>
+
+    <div id="scientific" class="scientific hidden">
+      <button onclick="append('Math.sin(')">sin</button>
+      <button onclick="append('Math.cos(')">cos</button>
+      <button onclick="append('Math.tan(')">tan</button>
+      <button onclick="append('Math.sqrt(')">√</button>
+      <button onclick="append('Math.log10(')">log</button>
+      <button onclick="append('Math.log(')">ln</button>
+      <button onclick="append('Math.PI')">π</button>
+      <button onclick="append('Math.E')">e</button>
+    </div>
   </div>
 
-  <input type="text" id="display" readonly>
-
-  <div class="buttons">
-    <button onclick="clearDisplay()">C</button>
-    <button onclick="deleteLast()">⌫</button>
-    <button onclick="append('%')">%</button>
-    <button onclick="append('/')">÷</button>
-
-    <button onclick="append('7')">7</button>
-    <button onclick="append('8')">8</button>
-    <button onclick="append('9')">9</button>
-    <button onclick="append('*')">×</button>
-
-    <button onclick="append('4')">4</button>
-    <button onclick="append('5')">5</button>
-    <button onclick="append('6')">6</button>
-    <button onclick="append('-')">-</button>
-
-    <button onclick="append('1')">1</button>
-    <button onclick="append('2')">2</button>
-    <button onclick="append('3')">3</button>
-    <button onclick="append('+')">+</button>
-
-    <button onclick="toggleScientific()">🔁</button>
-    <button onclick="append('0')">0</button>
-    <button onclick="append('.')">.</button>
-    <button onclick="calculate()">=</button>
+  <!-- History Modal -->
+  <div id="historyModal" class="modal">
+    <div class="modal-content">
+      <h2>History</h2>
+      <div id="historyList"></div>
+      <button onclick="clearHistory()">Clear</button>
+      <button onclick="closeHistory()">Close</button>
+    </div>
   </div>
 
-  <div id="scientific" class="scientific hidden">
-    <button onclick="append('Math.sin(')">sin</button>
-    <button onclick="append('Math.cos(')">cos</button>
-    <button onclick="append('Math.tan(')">tan</button>
-    <button onclick="append('Math.sqrt(')">√</button>
-    <button onclick="append('Math.log10(')">log</button>
-    <button onclick="append('Math.log(')">ln</button>
-    <button onclick="append('Math.PI')">π</button>
-    <button onclick="append('Math.E')">e</button>
-  </div>
-</div>
+  <!-- Chatbot Panel -->
+  <div id="aiPanel" class="ai-panel hidden">
+    <div class="ai-header">
+      <h3>🤖 Chatbot Agent</h3>
+      <button onclick="toggleAIPanel()" class="close-btn">✖</button>
+    </div>
+    <div id="chatLog" class="chat-log">
+      <!-- Messages will appear here -->
+      <div class="chat-message ai-msg">
+        <div class="msg-content">Hello! I'm your Chatbot Agent. Ask me a math question or upload an image of a problem,
+          and I'll give you a step-by-step solution!</div>
+      </div>
+    </div>
 
-<!-- History Modal -->
-<div id="historyModal" class="modal">
-  <div class="modal-content">
-    <h2>History</h2>
-    <div id="historyList"></div>
-    <button onclick="clearHistory()">Clear</button>
-    <button onclick="closeHistory()">Close</button>
-  </div>
-</div>
+    <div id="imagePreviewContainer" class="image-preview-container hidden">
+      <img id="imagePreview" src="" alt="Image Preview">
+      <button id="removeImageBtn" onclick="removeImage()">✖</button>
+    </div>
 
-<script src="script.js"></script>
+    <div class="chat-input-area">
+      <label for="imageUpload" class="upload-btn">📷</label>
+      <input type="file" id="imageUpload" accept="image/*" class="hidden-input" onchange="previewImage(event)">
+      <input type="text" id="chatInput" placeholder="Ask a math question...">
+      <button onclick="sendChatMessage()" id="sendBtn">➤</button>
+    </div>
+  </div>
+
+  <script src="script.js?v=6"></script>
 </body>
+
 </html>
